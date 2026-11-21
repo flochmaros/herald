@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>H.E.R.A.L.D. – Vlajky sveta</title>
+<meta name="description" content="Kartičky na vlajky všetkých 197 štátov sveta – učenie, skúšanie a prehľad.">
+<meta name="theme-color" content="#02070A">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HERALD">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* Layout: centered single column on a midnight field — blue aurora above, orange glow below; hero, continent rail, segmented control, one card stage */
+:root{
+  --bg:#02070A; --card:#0B1419; --card-2:#071015; --ink:#F3F6F8; --muted:rgba(243,246,248,.62); --faint:rgba(243,246,248,.4);
+  --hair:rgba(255,255,255,.09); --glass:rgba(255,255,255,.05); --glass-2:rgba(255,255,255,.1);
+  --blue:#0297DE; --orange:#FC734D;
+  --serif:"Instrument Serif","Times New Roman",serif;
+  --sans:"Geist",-apple-system,"SF Pro Text",system-ui,sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --spring:cubic-bezier(.34,1.32,.5,1); --ease:cubic-bezier(.2,.8,.2,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg)}
+body{color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.aurora{position:fixed;inset:-10%;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(55% 38% at 50% 2%, rgba(2,151,222,.55), transparent 70%),
+    radial-gradient(35% 25% at 22% 18%, rgba(2,151,222,.18), transparent 70%),
+    radial-gradient(60% 34% at 50% 104%, rgba(252,115,77,.42), transparent 70%),
+    radial-gradient(30% 22% at 82% 88%, rgba(252,115,77,.16), transparent 70%);
+  animation:drift 16s ease-in-out infinite alternate}
+.dots{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+  background-image:radial-gradient(rgba(255,255,255,.22) .6px, transparent .8px);background-size:24px 24px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 50% at 50% 10%, #000, transparent 75%);mask-image:radial-gradient(ellipse 70% 50% at 50% 10%, #000, transparent 75%)}
+@keyframes drift{to{transform:translate3d(0,-2.5%,0) scale(1.05)}}
+
+.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding-block:18px 72px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;flex-direction:column;gap:32px}
+
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:500;font-size:15px}
+.logo i{display:flex;gap:2px;align-items:center}
+.logo i b{display:block;width:3px;border-radius:2px;background:var(--ink)}
+.pill{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:7px 12px;border-radius:999px;background:var(--glass);border:1px solid var(--hair);color:var(--muted);white-space:nowrap}
+
+.hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;padding-top:12px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(56px,14vw,96px);line-height:.92;letter-spacing:-.025em;margin:0;text-wrap:balance}
+h1 em{font-style:italic}
+h1 .dot{color:var(--orange)}
+.lede{font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--muted);max-width:46ch;margin:0}
+.stats{display:flex;justify-content:center;gap:clamp(20px,6vw,56px);flex-wrap:wrap;margin-top:6px}
+.stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.stat b{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1;font-variant-numeric:tabular-nums}
+
+.rail-wrap{display:flex;flex-direction:column;gap:10px}
+.rail{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px;margin:-2px;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.rail::-webkit-scrollbar{display:none}
+.rail button{flex:none;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--hair);background:var(--glass);color:var(--muted);font:500 14px var(--sans);cursor:pointer;white-space:nowrap;transition:all .35s var(--ease)}
+.rail button span{font-family:var(--mono);font-size:11px;color:var(--faint);transition:color .35s}
+.rail button:hover{background:var(--glass-2);color:var(--ink)}
+.rail button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:transparent}
+.rail button[aria-pressed="true"] span{color:rgba(2,7,10,.55)}
+.rail button:last-child{margin-right:40px}
+
+.seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);padding:4px;border-radius:999px;background:var(--glass);border:1px solid var(--hair);width:min(100%,420px);margin:0 auto;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.seg button{position:relative;z-index:1;border:0;background:transparent;color:var(--muted);font:500 14px var(--sans);height:38px;border-radius:999px;cursor:pointer;transition:color .3s var(--ease)}
+.seg button[aria-selected="true"]{color:var(--ink)}
+.seg .ind{position:absolute;z-index:0;top:4px;bottom:4px;left:0;width:0;border-radius:999px;background:var(--glass-2);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 6px 18px -6px rgba(0,0,0,.6);transition:transform .55s var(--spring),width .55s var(--spring)}
+
+.panel{display:flex;flex-direction:column;gap:18px}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;min-height:34px}
+.meta b{color:var(--ink);font-weight:500}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;border:1px solid var(--hair);background:var(--glass);color:var(--muted);cursor:pointer;transition:all .3s var(--ease)}
+.chip svg{width:14px;height:14px}
+.chip[aria-pressed="true"]{border-color:color-mix(in srgb,var(--orange) 60%,transparent);color:var(--orange);background:color-mix(in srgb,var(--orange) 10%,transparent)}
+.track{height:3px;border-radius:99px;background:var(--hair);overflow:hidden}
+.track i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--blue),var(--orange));transition:width .7s var(--ease)}
+
+.stage{perspective:1600px}
+.card-wrap{position:relative;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+.card-wrap:active{cursor:grabbing}
+.card{position:relative;z-index:1;display:grid;transform-style:preserve-3d;transition:transform .75s var(--spring)}
+.card.flipped{transform:rotateY(180deg)}
+.card.instant{transition:none}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:34px;padding:30px 22px;min-height:470px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;
+  background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--hair);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 40px 80px -30px rgba(0,0,0,.85),0 0 0 .5px rgba(255,255,255,.04)}
+.back{transform:rotateY(180deg);gap:16px}
+.flag{display:flex;justify-content:center;align-items:center;width:100%;height:clamp(170px,46vw,260px)}
+.flag img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;border-radius:12px;filter:drop-shadow(0 22px 26px rgba(0,0,0,.55));-webkit-user-drag:none;pointer-events:none}
+.flag img.np,.back img.np{border-radius:0}
+.back .flag{height:62px}
+.back .flag img{border-radius:6px;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.country{font-family:var(--serif);font-size:clamp(32px,8vw,46px);line-height:1;letter-spacing:-.015em;text-wrap:balance}
+.cap{display:flex;flex-direction:column;gap:4px;align-items:center}
+.cap strong{font-size:24px;font-weight:600;letter-spacing:-.02em;color:var(--orange);text-wrap:balance;line-height:1.2}
+.note{font-size:13px;color:var(--faint);max-width:40ch;margin:-6px 0 0}
+.nums{display:grid;grid-template-columns:1fr 1fr;width:100%;max-width:380px;border-radius:18px;background:var(--glass);border:1px solid var(--hair)}
+.nums div{display:flex;flex-direction:column;gap:2px;padding:10px 12px;align-items:center}
+.nums div+div{border-left:1px solid var(--hair)}
+.nums b{font-weight:600;font-size:17px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.fact{max-width:44ch;text-align:left;display:flex;flex-direction:column;gap:4px}
+.fact span{color:var(--orange)}
+.fact p{margin:0;font-size:15px;line-height:1.55;color:var(--muted)}
+
+.tint{position:absolute;inset:0;z-index:2;border-radius:34px;pointer-events:none;opacity:0;display:flex;align-items:flex-start;padding:22px}
+.tint span{font-family:var(--mono);font-size:12px;letter-spacing:.14em;padding:7px 12px;border-radius:999px;border:1.5px solid currentColor}
+.tint.yes{justify-content:flex-start;color:var(--blue);background:radial-gradient(80% 70% at 0% 0%,rgba(2,151,222,.28),transparent 70%);box-shadow:inset 0 0 0 1.5px rgba(2,151,222,.6)}
+.tint.no{justify-content:flex-end;color:var(--orange);background:radial-gradient(80% 70% at 100% 0%,rgba(252,115,77,.28),transparent 70%);box-shadow:inset 0 0 0 1.5px rgba(252,115,77,.6)}
+
+.controls{display:flex;gap:12px;justify-content:center;align-items:center;flex-wrap:wrap}
+.btn{height:54px;padding:0 28px;border-radius:999px;font:600 16px var(--sans);letter-spacing:-.01em;cursor:pointer;
+  border:1px solid var(--hair);background:var(--glass);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  transition:transform .4s var(--spring),background .25s var(--ease),box-shadow .25s var(--ease)}
+.btn:hover{background:var(--glass-2)}
+.btn:active{transform:scale(.95)}
+.btn.orange{background:var(--orange);border-color:transparent;color:#1E0A03;box-shadow:0 10px 30px -10px rgba(252,115,77,.7)}
+.btn.orange:hover{background:#FF8463}
+.btn.white{background:var(--ink);border-color:transparent;color:var(--bg);box-shadow:0 10px 30px -10px rgba(255,255,255,.35)}
+.btn.white:hover{background:#fff}
+.btn.round{width:54px;padding:0}
+.btn svg{width:20px;height:20px}
+.btn.wide{min-width:150px}
+button:focus-visible,input:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.keys{text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--faint);margin:0}
+
+.done{border-radius:34px;padding:40px 24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;
+  background:linear-gradient(180deg,var(--card),var(--card-2));border:1px solid var(--hair);box-shadow:inset 0 1px 0 rgba(255,255,255,.07)}
+.score{font-family:var(--serif);font-size:clamp(80px,22vw,120px);line-height:.9;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.score em{color:var(--faint);font-style:italic}
+.done p{margin:0;color:var(--muted);max-width:40ch}
+.mini{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center}
+.mini img{height:34px;width:auto;border-radius:4px;box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.search{position:relative;flex:1 1 220px;min-width:0}
+.search svg{position:absolute;left:16px;top:50%;width:16px;height:16px;transform:translateY(-50%);color:var(--faint)}
+.search input{width:100%;height:44px;border-radius:999px;border:1px solid var(--hair);background:var(--glass);color:var(--ink);font:400 15px var(--sans);padding:0 16px 0 42px}
+.search input::placeholder{color:var(--faint)}
+.switch{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--muted);cursor:pointer}
+.switch input{appearance:none;-webkit-appearance:none;margin:0;width:46px;height:28px;border-radius:999px;background:rgba(255,255,255,.16);position:relative;cursor:pointer;transition:background .3s var(--ease)}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .45s var(--spring)}
+.switch input:checked{background:var(--orange)}
+.switch input:checked::after{transform:translateX(18px)}
+.group{display:flex;flex-direction:column;gap:14px}
+.group h2{font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.05;margin:0;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.group h2 em{font-style:italic}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.item{border-radius:24px;padding:14px 14px 16px;display:flex;flex-direction:column;gap:6px;min-width:0;background:var(--glass);border:1px solid var(--hair);transition:transform .45s var(--spring),background .3s}
+.item:hover{transform:translateY(-3px);background:var(--glass-2)}
+.item .fl{height:110px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.item .fl img{max-width:100%;max-height:100%;width:auto;height:auto;border-radius:8px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.45))}
+.item .n{font-weight:600;font-size:16px;letter-spacing:-.01em;line-height:1.25}
+.item .c{color:var(--orange);font-weight:500;font-size:15px;width:max-content;max-width:100%;transition:color .3s,background .3s}
+.item .s{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.03em}
+.item .t{font-size:13px;color:var(--faint);line-height:1.5}
+.hidecap .item .c{color:transparent;background:var(--glass-2);border-radius:6px}
+.empty{color:var(--muted);text-align:center;padding:24px 0;margin:0}
+
+.howto{border-radius:28px;padding:24px;background:var(--glass);border:1px solid var(--hair);display:flex;flex-direction:column;gap:14px}
+.howto h2{font-family:var(--serif);font-weight:400;font-size:30px;margin:0;line-height:1}
+.howto ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;counter-reset:s}
+.howto li{display:grid;grid-template-columns:28px 1fr;gap:10px;color:var(--muted);font-size:15px;counter-increment:s}
+.howto li::before{content:counter(s,decimal-leading-zero);font-family:var(--mono);font-size:11px;color:var(--orange);padding-top:4px}
+.howto li b{color:var(--ink);font-weight:500}
+.src{text-align:center;margin:0;line-height:1.8}
+
+.rise{animation:rise .9s var(--ease) both;animation-delay:calc(var(--d,0) * 90ms)}
+@keyframes rise{from{opacity:0;transform:translateY(16px);filter:blur(8px)}}
+@media (prefers-reduced-motion: reduce){
+  .aurora,.rise{animation:none}
+  .card,.seg .ind,.btn,.item,.switch input::after,.track i,.rail button{transition:none}
+}
+</style>
+<style>/* PWA */html,body{margin:0;padding:0}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}.wrap{padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"></div>
+<div class="dots" aria-hidden="true"></div>
+
+<div class="wrap">
+  <nav class="nav rise">
+    <div class="logo"><i><b style="height:8px"></b><b style="height:14px"></b><b style="height:10px"></b><b style="height:16px"></b></i>H.E.R.A.L.D.</div>
+    <span class="pill">VLAJKA · ŠTÁT · HLAVNÉ MESTO</span>
+  </nav>
+
+  <header class="hero">
+    <h1 class="rise" style="--d:1">Vlajky <em>sveta</em><span class="dot">.</span></h1>
+    <p class="lede rise" style="--d:2">Pozri na vlajku, nahlas povedz krajinu a hlavné mesto, potom kartu otoč.</p>
+    <div class="stats rise" style="--d:3">
+      <div class="stat"><b>197</b><span class="mono">štátov</span></div>
+      <div class="stat"><b>6</b><span class="mono">oblastí</span></div>
+      <div class="stat"><b>197</b><span class="mono">zaujímavostí</span></div>
+    </div>
+  </header>
+
+  <div class="rail-wrap rise" style="--d:4">
+    <span class="mono">Čo sa učíš</span>
+    <div class="rail" id="rail"></div>
+  </div>
+
+  <div class="seg rise" style="--d:5" role="tablist" id="seg">
+    <span class="ind" id="ind"></span>
+    <button role="tab" data-mode="learn" aria-selected="true">Učenie</button>
+    <button role="tab" data-mode="test" aria-selected="false">Skúšanie</button>
+    <button role="tab" data-mode="list" aria-selected="false">Prehľad</button>
+  </div>
+
+  <section class="panel rise" style="--d:6" id="play">
+    <div class="meta" id="meta-learn">
+      <span class="mono"><b id="l-count">001 / 197</b> · <span id="l-group"></span></span>
+      <button class="chip" id="l-random" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Náhodne
+      </button>
+    </div>
+    <div id="meta-test" hidden style="display:flex;flex-direction:column;gap:10px">
+      <div class="meta">
+        <span class="mono">Zostáva <b id="t-left">0</b> · Vedel <b id="t-known">0</b> · Chyby <b id="t-wrong">0</b></span>
+        <button class="chip" id="t-restart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Odznova
+        </button>
+      </div>
+      <div class="track"><i id="t-prog"></i></div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="card-wrap" id="wrap" tabindex="0" aria-label="Kartička, ťukni pre otočenie">
+        <div class="card" id="card">
+          <div class="face front">
+            <div class="flag"><img id="f-flag" alt="Vlajka"></div>
+            <span class="mono" id="f-hint">Ťukni a otoč</span>
+          </div>
+          <div class="face back">
+            <div class="flag"><img id="b-flag" alt=""></div>
+            <div class="country" id="b-country"></div>
+            <div class="cap"><span class="mono">Hlavné mesto</span><strong id="b-cap"></strong></div>
+            <p class="note" id="b-note"></p>
+            <div class="nums">
+              <div><span class="mono">Rozloha</span><b id="b-area"></b></div>
+              <div><span class="mono">Obyvatelia</span><b id="b-pop"></b></div>
+            </div>
+            <div class="fact"><span class="mono">Zaujímavosť</span><p id="b-fact"></p></div>
+          </div>
+        </div>
+        <div class="tint" id="tint"><span id="tint-label"></span></div>
+      </div>
+    </div>
+
+    <div class="done" id="done" hidden>
+      <span class="mono">Výsledok na prvý pokus</span>
+      <div class="score" id="score"></div>
+      <p id="done-text"></p>
+      <div class="mini" id="done-flags"></div>
+      <div class="controls">
+        <button class="btn orange wide" id="again-wrong">Opakovať chybné</button>
+        <button class="btn wide" id="again-all">Nové náhodné kolo</button>
+      </div>
+    </div>
+
+    <div class="controls" id="ctrl"></div>
+    <p class="keys" id="keys"></p>
+  </section>
+
+  <section class="panel" id="list" hidden>
+    <div class="toolbar">
+      <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Hľadaj štát alebo mesto" autocomplete="off"></label>
+      <label class="switch"><input type="checkbox" id="hidecap"> Skryť hlavné mestá</label>
+    </div>
+    <div id="groups" style="display:flex;flex-direction:column;gap:36px"></div>
+  </section>
+
+  <div class="howto">
+    <h2>Ako sa to <em style="font-style:italic">naučiť</em></h2>
+    <ol>
+      <li><span><b>Vyber oblasť.</b> Uč sa po kapitolách, napríklad len Európu. Celý svet naraz je zbytočne veľa.</span></li>
+      <li><span><b>Učenie.</b> Prechádzaj karty po abecede. Najprv hádaj, potom otoč a prečítaj si aj zaujímavosť, pomôže ti štát si zapamätať.</span></li>
+      <li><span><b>Skúšanie.</b> Vlajky idú náhodne ako u učiteľa. Odpovedaj nahlas, napríklad „Samoa, Apia“. Otočenú kartu môžeš potiahnuť doprava (vedel) alebo doľava (nevedel).</span></li>
+      <li><span><b>Zajtra znova.</b> Jedno náhodné kolo deň pred skúšaním pomôže viac ako hodina naraz.</span></li>
+    </ol>
+  </div>
+  <p class="mono src">Rozloha a obyvatelia: CIA World Factbook, odhady 2024–2025<br>Vlajky: Wikimedia Commons</p>
+</div>
+
+<script>
+const DATA=[{"c":"af","k":"A","n":"Afganistan","cap":"Kábul","f":"Nemá more. Pohorie Hindúkuš zaberá veľkú časť krajiny a jeho vrcholy majú vyše 7 000 m.","a":652230,"p":49474805},{"c":"al","k":"E","n":"Albánsko","cap":"Tirana","f":"Na vlajke je čierny dvojhlavý orol. Albánci volajú svoju krajinu Shqipëria, krajina orlov.","a":28748,"p":2551837},{"c":"dz","k":"F","n":"Alžírsko","cap":"Alžír","f":"Najväčšia krajina Afriky. Vyše 80 % jej územia pokrýva Sahara.","a":2381740,"p":47735685},{"c":"ad","k":"E","n":"Andorra","cap":"Andorra la Vella","f":"Leží v Pyrenejach medzi Francúzskom a Španielskom. Andorra la Vella je najvyššie položené hlavné mesto Európy.","a":468,"p":85370},{"c":"ao","k":"F","n":"Angola","cap":"Luanda","f":"Bývalá portugalská kolónia, úradným jazykom je portugalčina. Patrí k najväčším producentom ropy v Afrike.","a":1246700,"p":38984796},{"c":"ag","k":"S","n":"Antigua a Barbuda","cap":"Saint John's","f":"Hovorí sa, že Antigua má 365 pláží, jednu na každý deň v roku.","a":443,"p":102634},{"c":"ar","k":"J","n":"Argentína","cap":"Buenos Aires","f":"Leží tu Aconcagua (6 961 m), najvyšší vrch oboch Amerík. Z Argentíny pochádza tango.","a":2780400,"p":45418098},{"c":"am","k":"A","n":"Arménsko","cap":"Jerevan","f":"Ako prvá krajina na svete prijala kresťanstvo za štátne náboženstvo, okolo roku 301.","a":29743,"p":2963837},{"c":"au","k":"O","n":"Austrália","cap":"Canberra","f":"Jediný štát, ktorý zaberá celý kontinent. Klokany a koaly vo voľnej prírode žijú iba tu.","a":7741220,"p":27490921},{"c":"az","k":"A","n":"Azerbajdžan","cap":"Baku","f":"Volajú ho krajina ohňa, na niektorých miestach zo zeme samovoľne horí plyn. Baku leží pod úrovňou mora.","a":86600,"p":10694370},{"c":"bs","k":"S","n":"Bahamy","cap":"Nassau","f":"Súostrovie má asi 700 ostrovov. Práve tu v roku 1492 Kolumbus prvýkrát pristál v Amerike.","a":13880,"p":415306},{"c":"bh","k":"A","n":"Bahrajn","cap":"Manáma","f":"Ostrovný štát v Perzskom zálive. So Saudskou Arábiou ho spája asi 25 km dlhý most.","a":760,"p":1566888},{"c":"bd","k":"A","n":"Bangladéš","cap":"Dháka","f":"Patrí k najhustejšie zaľudneným krajinám sveta. Väčšinu územia tvorí delta riek Ganga a Brahmaputra.","a":148460,"p":174370536},{"c":"bb","k":"S","n":"Barbados","cap":"Bridgetown","f":"Najvýchodnejší ostrov Karibiku. Pochádza odtiaľ speváčka Rihanna.","a":430,"p":304139},{"c":"be","k":"E","n":"Belgicko","cap":"Brusel","f":"V Bruseli sídli Európska únia aj NATO. Z Belgicka pochádzajú hranolky aj Šmolkovia.","a":30528,"p":11960170},{"c":"bz","k":"S","n":"Belize","cap":"Belmopan","f":"Jediná krajina Strednej Ameriky, kde je úradným jazykom angličtina. Pri pobreží leží druhý najväčší koralový útes sveta.","a":22966,"p":421960},{"c":"bj","k":"F","n":"Benin","cap":"Porto-Novo","note":"Vláda sídli v Cotonou.","f":"Pochádza odtiaľto náboženstvo vúdú, ktoré je tu dodnes úradne uznané.","a":112622,"p":15186090},{"c":"bt","k":"A","n":"Bhután","cap":"Thimphu","f":"Namiesto bohatstva meria šťastie obyvateľov, tzv. hrubé národné šťastie. Na vlajke je biely drak.","a":38394,"p":892877},{"c":"by","k":"E","n":"Bielorusko","cap":"Minsk","f":"Nemá more, ale má vyše 10 000 jazier. V Belovežskom pralese žijú zubry.","a":207600,"p":9460972},{"c":"bo","k":"J","n":"Bolívia","cap":"Sucre","note":"Vláda a parlament sídlia v La Paz.","f":"Nemá more, ale má námorníctvo na jazere Titicaca. Salar de Uyuni je najväčšia soľná pláň sveta.","a":1098581,"p":12436103},{"c":"ba","k":"E","n":"Bosna a Hercegovina","cap":"Sarajevo","f":"V Sarajeve v roku 1914 zastrelili následníka trónu Františka Ferdinanda, čo spustilo 1. svetovú vojnu.","a":51197,"p":3653499},{"c":"bw","k":"F","n":"Botswana","cap":"Gaborone","f":"Patrí k najväčším ťažiarom diamantov na svete. Rieka Okavango sa tu stráca v púšti Kalahari.","a":581730,"p":2521534},{"c":"br","k":"J","n":"Brazília","cap":"Brasília","f":"Najväčšia krajina Južnej Ameriky. Leží tu väčšina Amazonského pralesa.","a":8515770,"p":221359387},{"c":"bn","k":"A","n":"Brunej","cap":"Bandar Seri Begawan","f":"Malý sultanát na ostrove Borneo, bohatý vďaka rope. Sultánov palác patrí k najväčším na svete.","a":5765,"p":491900},{"c":"bg","k":"E","n":"Bulharsko","cap":"Sofia","f":"Kývnutie hlavou tu znamená nie a krútenie áno. Bulharsko je veľkým pestovateľom ruží na ružový olej.","a":110879,"p":6737997},{"c":"bf","k":"F","n":"Burkina Faso","cap":"Ouagadougou","f":"Názov znamená krajina čestných ľudí. Každé dva roky sa tu koná najväčší africký filmový festival.","a":274200,"p":23490300},{"c":"bi","k":"F","n":"Burundi","cap":"Gitega","note":"Do roku 2019 bola hlavným mestom Bujumbura.","f":"Malá vnútrozemská krajina pri jazere Tanganika, druhom najhlbšom jazere sveta.","a":27830,"p":13590102},{"c":"cy","k":"E","n":"Cyprus","cap":"Nikózia","f":"Ostrov je od roku 1974 rozdelený a Nikózia je posledné rozdelené hlavné mesto Európy. Na vlajke je mapa ostrova.","a":9251,"p":1332293},{"c":"td","k":"F","n":"Čad","cap":"N'Djamena","f":"Jazero Čad sa za posledných 60 rokov zmenšilo o vyše 90 %. Vlajka je takmer rovnaká ako rumunská.","a":1284000,"p":19674004},{"c":"cz","k":"E","n":"Česko","cap":"Praha","f":"Pražský hrad patrí k najväčším hradným komplexom na svete. Z Česka pochádza Krtko aj slovo robot.","a":78867,"p":10838703},{"c":"me","k":"E","n":"Čierna Hora","cap":"Podgorica","f":"Hoci nie je v Európskej únii, platí sa tu eurom. Kaňon rieky Tara patrí k najhlbším v Európe.","a":13812,"p":599849},{"c":"cl","k":"J","n":"Čile","cap":"Santiago de Chile","note":"Parlament sídli vo Valparaíse.","f":"Je dlhé asi 4 300 km, no v priemere len 180 km široké. Púšť Atacama patrí k najsuchším miestam na Zemi.","a":756102,"p":19091343},{"c":"cn","k":"A","n":"Čína","cap":"Peking","f":"Postavila Veľký čínsky múr, najdlhšiu stavbu sveta. Napriek svojej veľkosti používa jedno časové pásmo.","a":9596960,"p":1407181209},{"c":"dk","k":"E","n":"Dánsko","cap":"Kodaň","f":"Má najstaršiu vlajku sveta, ktorá sa stále používa. Pochádza odtiaľto LEGO.","a":43094,"p":6051491},{"c":"dm","k":"S","n":"Dominika","cap":"Roseau","f":"Na vlajke je papagáj. Je tu Vriace jazero, druhé najväčšie horúce jazero sveta.","a":751,"p":74661},{"c":"do","k":"S","n":"Dominikánska republika","cap":"Santo Domingo","f":"Santo Domingo je najstaršie európske mesto v Amerike, založené v roku 1496. Na vlajke je Biblia.","a":48670,"p":10899292},{"c":"dj","k":"F","n":"Džibutsko","cap":"Džibuti","f":"Jazero Assal leží 155 m pod hladinou mora a je to najnižšie miesto Afriky.","a":23200,"p":1013703},{"c":"eg","k":"F","n":"Egypt","cap":"Káhira","f":"Pyramídy v Gíze sú jediný zo 7 divov starovekého sveta, ktorý stojí dodnes. Cez krajinu tečie Níl.","a":1001450,"p":112870457},{"c":"ec","k":"J","n":"Ekvádor","cap":"Quito","f":"Pomenovali ho podľa rovníka, po španielsky ecuador. Patria mu Galapágy, kde Darwin skúmal vývoj druhov.","a":283561,"p":18479841},{"c":"er","k":"F","n":"Eritrea","cap":"Asmara","f":"Asmara je plná modernistických stavieb z čias talianskej kolónie a je zapísaná v UNESCO.","a":117600,"p":6416435},{"c":"ee","k":"E","n":"Estónsko","cap":"Tallinn","f":"Patrí k najdigitálnejším krajinám sveta, voliť sa dá cez internet. Vznikol tu Skype.","a":45228,"p":1340478},{"c":"sz","k":"F","n":"Eswatini (Svazijsko)","cap":"Mbabane","note":"Kráľovské a zákonodarné sídlo je Lobamba.","f":"Jedna z posledných absolútnych monarchií sveta. Do roku 2018 sa volala Svazijsko.","a":17364,"p":1137268},{"c":"et","k":"F","n":"Etiópia","cap":"Addis Abeba","f":"Pravlasť kávy. Má vlastný kalendár s 13 mesiacmi, podľa ktorého je o 7 až 8 rokov skôr ako u nás.","a":1104300,"p":121372632},{"c":"fj","k":"O","n":"Fidži","cap":"Suva","f":"Má vyše 300 ostrovov. Prechádza ním 180. poludník, pri ktorom sa mení dátum.","a":18274,"p":951611},{"c":"ph","k":"A","n":"Filipíny","cap":"Manila","f":"Tvorí ich vyše 7 600 ostrovov. Vo vojne otočia vlajku hore nohami, aby bola hore červená.","a":300000,"p":118277063},{"c":"fi","k":"E","n":"Fínsko","cap":"Helsinki","f":"Krajina tisícich jazier, v skutočnosti ich má asi 188 000. Na 5,6 milióna ľudí pripadajú asi 3 milióny sáun.","a":338145,"p":5550449},{"c":"fr","k":"E","n":"Francúzsko","cap":"Paríž","f":"Najnavštevovanejšia krajina sveta. Eiffelovu vežu mali pôvodne po 20 rokoch zbúrať.","a":643801,"p":68512806},{"c":"ga","k":"F","n":"Gabon","cap":"Libreville","f":"Takmer 90 % územia pokrýva dažďový prales. Žije tu veľa lesných slonov a goríl.","a":267667,"p":2513738},{"c":"gm","k":"F","n":"Gambia","cap":"Banjul","f":"Najmenšia krajina pevninskej Afriky. Je to úzky pás pozdĺž rieky Gambia, okrem pobrežia celý obklopený Senegalom.","a":11300,"p":2523327},{"c":"gh","k":"F","n":"Ghana","cap":"Akkra","f":"Prvá krajina subsaharskej Afriky, ktorá získala nezávislosť (1957). Voltské jazero je jedna z najväčších umelých nádrží sveta.","a":238533,"p":35336133},{"c":"gr","k":"E","n":"Grécko","cap":"Atény","f":"Kolíska demokracie a olympijských hier. Má asi 6 000 ostrovov, obývaných je okolo 200.","a":131957,"p":10424536},{"c":"gd","k":"S","n":"Grenada","cap":"Saint George's","f":"Volajú ju ostrov korenia, pestuje sa tu muškátový oriešok. Ten je nakreslený aj na vlajke.","a":344,"p":114621},{"c":"ge","k":"A","n":"Gruzínsko","cap":"Tbilisi","f":"Víno sa tu robí asi 8 000 rokov, je to možno najstaršia vinárska krajina sveta. Má vlastné písmo.","a":69700,"p":4900961},{"c":"gt","k":"S","n":"Guatemala","cap":"Guatemala","f":"Srdce starovekej mayskej ríše s ruinami mesta Tikal. Na vlajke je vták kvesal.","a":108889,"p":18255216},{"c":"gn","k":"F","n":"Guinea","cap":"Konakry","f":"Má asi štvrtinu svetových zásob bauxitu, z ktorého sa vyrába hliník. Pramení tu rieka Niger.","a":245857,"p":14374590},{"c":"gw","k":"F","n":"Guinea-Bissau","cap":"Bissau","f":"Patrí jej súostrovie Bijagós, kde hrochy plávajú v slanom mori.","a":36125,"p":2132325},{"c":"gy","k":"J","n":"Guyana","cap":"Georgetown","f":"Jediná krajina Južnej Ameriky s angličtinou ako úradným jazykom. Vodopád Kaieteur je vyše 4-krát vyšší ako Niagara.","a":214969,"p":794099},{"c":"ht","k":"S","n":"Haiti","cap":"Port-au-Prince","f":"Prvá krajina, kde otroci vybojovali nezávislosť (1804). Delí sa o ostrov Hispaniola s Dominikánskou republikou.","a":27750,"p":11898812},{"c":"nl","k":"E","n":"Holandsko","cap":"Amsterdam","note":"Vláda a parlament sídlia v Haagu.","f":"Asi štvrtina krajiny leží pod úrovňou mora. Je tu viac bicyklov ako ľudí.","a":41543,"p":17833885},{"c":"hn","k":"S","n":"Honduras","cap":"Tegucigalpa","f":"Leží tu mayské mesto Copán. Pre vývoz banánov vznikol práve tu výraz banánová republika.","a":112090,"p":9529188},{"c":"hr","k":"E","n":"Chorvátsko","cap":"Záhreb","f":"Má vyše 1 000 ostrovov. Kravata pochádza od chorvátskych vojakov, jej názov vznikol zo slova Hrvat.","a":56594,"p":4071208},{"c":"in","k":"A","n":"India","cap":"Naí Dillí","f":"Najľudnatejšia krajina sveta. Vznikol tu šach aj zápis čísel s nulou, ktorý používame dodnes.","a":3287263,"p":1419316933},{"c":"id","k":"A","n":"Indonézia","cap":"Jakarta","note":"Na Borneu sa stavia nové hlavné mesto Nusantara.","f":"Najväčší ostrovný štát sveta s vyše 17 000 ostrovmi. Žijú tu varany komodské.","a":1904569,"p":283587097},{"c":"iq","k":"A","n":"Irak","cap":"Bagdad","f":"Leží tu Mezopotámia medzi Eufratom a Tigrisom, kde vzniklo jedno z prvých písiem, klinové písmo.","a":438317,"p":42917742},{"c":"ir","k":"A","n":"Irán","cap":"Teherán","f":"Kedysi sa volal Perzia. Pochádzajú odtiaľto perzské koberce aj hra pólo.","a":1648195,"p":89177357},{"c":"ie","k":"E","n":"Írsko","cap":"Dublin","f":"Zelený ostrov, kde nežijú divé hady. Pochádza odtiaľto Halloween aj sviatok sv. Patrika.","a":70273,"p":5233461},{"c":"is","k":"E","n":"Island","cap":"Reykjavík","f":"Krajina ľadu a ohňa so sopkami aj ľadovcami. Parlament Althing je jeden z najstarších na svete (930).","a":103000,"p":364036},{"c":"il","k":"A","n":"Izrael","cap":"Jeruzalem","note":"Medzinárodne sporné, väčšina veľvyslanectiev je v Tel Avive.","f":"Mŕtve more leží asi 430 m pod hladinou mora. Je také slané, že sa v ňom nedá potopiť.","a":21937,"p":9402617},{"c":"jm","k":"S","n":"Jamajka","cap":"Kingston","f":"Domov reggae a Boba Marleyho. Pochádza odtiaľto aj Usain Bolt, najrýchlejší človek v histórii.","a":10991,"p":2938503},{"c":"jp","k":"A","n":"Japonsko","cap":"Tokio","f":"Tvorí ho vyše 14 000 ostrovov. Rýchlovlak šinkansen tu jazdí už od roku 1964.","a":377915,"p":123201945},{"c":"ye","k":"A","n":"Jemen","cap":"Sana","f":"V meste Šibám stoja hlinené mrakodrapy zo 16. storočia, volajú ho Manhattan púšte.","a":527968,"p":34505496},{"c":"jo","k":"A","n":"Jordánsko","cap":"Ammán","f":"Mesto Petra je vytesané priamo do červenej skaly. Krajina leží pri Mŕtvom mori.","a":89342,"p":11312507},{"c":"za","k":"F","n":"Juhoafrická republika","cap":"Pretória","note":"Parlament sídli v Kapskom Meste, najvyšší súd v Bloemfonteine.","f":"Má 3 hlavné mestá a 12 úradných jazykov. Jej vlajka má 6 farieb.","a":1219090,"p":61089926},{"c":"kr","k":"A","n":"Južná Kórea","cap":"Soul","f":"Má jeden z najrýchlejších internetov na svete. Pochádza odtiaľto Samsung aj K-pop.","a":99720,"p":51486343},{"c":"ss","k":"F","n":"Južný Sudán","cap":"Džuba","f":"Najmladší štát sveta, nezávislý od roku 2011.","a":644329,"p":12703714},{"c":"kh","k":"A","n":"Kambodža","cap":"Phnom Pénh","f":"Na vlajke je chrám Angkor Vat, najväčšia náboženská stavba na svete.","a":181035,"p":17230333},{"c":"cm","k":"F","n":"Kamerun","cap":"Yaoundé","f":"Pre pestrú prírodu ho volajú Afrika v malom. Hovorí sa tu po francúzsky aj po anglicky.","a":475440,"p":31518954},{"c":"ca","k":"S","n":"Kanada","cap":"Ottawa","f":"Druhá najväčšia krajina sveta s najdlhším pobrežím na svete. Na vlajke je javorový list.","a":9984670,"p":39187155},{"c":"cv","k":"F","n":"Kapverdy","cap":"Praia","f":"Súostrovie sopečných ostrovov v Atlantickom oceáne. Na ostrove Fogo je činná sopka.","a":4033,"p":611014},{"c":"qa","k":"A","n":"Katar","cap":"Dauha","f":"V roku 2022 sa tu konali prvé futbalové majstrovstvá sveta na Blízkom východe.","a":11586,"p":2568426},{"c":"kz","k":"A","n":"Kazachstan","cap":"Astana","f":"Najväčšia vnútrozemská krajina sveta. Z kozmodrómu Bajkonur odštartoval do vesmíru Jurij Gagarin.","a":2724900,"p":20432662},{"c":"ke","k":"F","n":"Keňa","cap":"Nairobi","f":"Každý rok tu milióny pakoní prechádzajú cez rieku Mara. Kenskí bežci vyhrávajú veľa maratónov.","a":580367,"p":55751717},{"c":"kg","k":"A","n":"Kirgizsko","cap":"Biškek","f":"Asi 90 % územia tvoria hory. Jazero Issyk-Kuľ v zime nezamŕza, hoci leží vysoko v horách.","a":199951,"p":6219751},{"c":"ki","k":"O","n":"Kiribati","cap":"Tarawa","f":"Ako jediná krajina leží na všetkých 4 pologuliach. Nový rok tu začína ako prvý na svete.","a":811,"p":116545},{"c":"co","k":"J","n":"Kolumbia","cap":"Bogota","f":"Najväčší producent smaragdov na svete. Ako jediná krajina Južnej Ameriky má pobrežie pri Tichom oceáne aj pri Karibskom mori.","a":1138910,"p":49842298},{"c":"km","k":"F","n":"Komory","cap":"Moroni","f":"Sopečné ostrovy medzi Afrikou a Madagaskarom. Pestuje sa tu veľa vanilky a ylang-ylangu na parfumy.","a":2235,"p":911707},{"c":"cg","k":"F","n":"Kongo","cap":"Brazzaville","f":"Od Kinshasy, hlavného mesta druhého Konga, ju delí len rieka Kongo. Sú to dve najbližšie hlavné mestá sveta, ak nerátame Rím a Vatikán.","a":342000,"p":6097665},{"c":"cd","k":"F","n":"Konžská demokratická republika","cap":"Kinshasa","f":"Druhá najväčšia krajina Afriky. Rieka Kongo je najhlbšia rieka sveta, miestami má vyše 220 m.","a":2344858,"p":119038825},{"c":"xk","k":"E","n":"Kosovo","cap":"Priština","note":"Nezávislosť vyhlásilo v roku 2008. Slovensko ho neuznáva.","f":"Jedna z najmladších krajín Európy. Na vlajke je mapa krajiny a 6 hviezd za 6 národov.","a":10887,"p":1977093},{"c":"cr","k":"S","n":"Kostarika","cap":"San José","f":"Od roku 1948 nemá armádu. Asi štvrtina územia je chránená príroda.","a":51100,"p":5304932},{"c":"cu","k":"S","n":"Kuba","cap":"Havana","f":"Najväčší ostrov Karibiku. Žije tu kolibrík kubánsky, najmenší vták na svete.","a":110860,"p":10059519},{"c":"kw","k":"A","n":"Kuvajt","cap":"Kuvajt","f":"Kuvajtský dinár je najhodnotnejšia mena sveta. Krajina nemá žiadne rieky ani jazerá.","a":17818,"p":3172511},{"c":"la","k":"A","n":"Laos","cap":"Vientiane","f":"Jediná vnútrozemská krajina juhovýchodnej Ázie. Na Planine džbánov ležia stovky obrovských kamenných nádob.","a":236800,"p":7953556},{"c":"ls","k":"F","n":"Lesotho","cap":"Maseru","f":"Celé ho obklopuje Juhoafrická republika. Celé jeho územie leží vyše 1 000 m nad morom.","a":30355,"p":2222962},{"c":"lb","k":"A","n":"Libanon","cap":"Bejrút","f":"Na vlajke je libanonský céder. Feničania odtiaľto vytvorili abecedu, z ktorej vychádza aj naše písmo.","a":10400,"p":5364482},{"c":"lr","k":"F","n":"Libéria","cap":"Monrovia","f":"Založili ju oslobodení otroci z USA. Hlavné mesto nesie meno amerického prezidenta Monroea.","a":111369,"p":5563541},{"c":"ly","k":"F","n":"Líbya","cap":"Tripolis","f":"Takmer 90 % územia je púšť. Namerali tu 58 °C, čo sa 90 rokov považovalo za svetový rekord.","a":1759540,"p":7361263},{"c":"li","k":"E","n":"Lichtenštajnsko","cap":"Vaduz","f":"Je obklopené iba vnútrozemskými krajinami, podobne ako Uzbekistan. Je veľkým výrobcom umelých zubov.","a":160,"p":40547},{"c":"lt","k":"E","n":"Litva","cap":"Vilnius","f":"Litovčina je jeden z najstarších živých jazykov Európy. Basketbal je tu najobľúbenejší šport.","a":65300,"p":2815687},{"c":"lv","k":"E","n":"Lotyšsko","cap":"Riga","f":"V Rige vraj prvýkrát ozdobili vianočný stromček (1510). Takmer polovicu krajiny pokrývajú lesy.","a":64589,"p":1888439},{"c":"lu","k":"E","n":"Luxembursko","cap":"Luxemburg","f":"Ako prvá krajina na svete zaviedla verejnú dopravu zadarmo pre všetkých (2020).","a":2586,"p":671254},{"c":"mg","k":"F","n":"Madagaskar","cap":"Antananarivo","f":"Štvrtý najväčší ostrov sveta. Väčšinu tunajších zvierat, napríklad lemury, inde vo voľnej prírode nenájdeš.","a":587041,"p":31345040},{"c":"hu","k":"E","n":"Maďarsko","cap":"Budapešť","f":"Pod Budapešťou je vyše 100 termálnych prameňov. Z Maďarska pochádza Rubikova kocka.","a":93028,"p":9855745},{"c":"my","k":"A","n":"Malajzia","cap":"Kuala Lumpur","f":"Veže Petronas boli v rokoch 1998 až 2004 najvyššie budovy sveta. Na Borneu tu žijú orangutany.","a":329847,"p":34905275},{"c":"mw","k":"F","n":"Malawi","cap":"Lilongwe","f":"Jazero Malawi má viac druhov rýb ako ktorékoľvek iné jazero na svete.","a":118484,"p":21763309},{"c":"mv","k":"A","n":"Maldivy","cap":"Malé","f":"Najnižšie položená krajina sveta, v priemere len asi 1,5 m nad morom. Má okolo 1 200 ostrovov.","a":298,"p":388858},{"c":"ml","k":"F","n":"Mali","cap":"Bamako","f":"Timbuktu bolo v stredoveku slávnym centrom učenosti. Veľká mešita v Djenné je najväčšia hlinená stavba sveta.","a":1240192,"p":22634423},{"c":"mt","k":"E","n":"Malta","cap":"Valletta","f":"Najmenšia krajina Európskej únie. Jej megalitické chrámy sú staršie ako egyptské pyramídy.","a":316,"p":521828},{"c":"ma","k":"F","n":"Maroko","cap":"Rabat","f":"Univerzita al-Karaouine vo Feze z roku 859 je najstaršia stále fungujúca univerzita sveta.","a":716550,"p":37387585},{"c":"mh","k":"O","n":"Marshallove ostrovy","cap":"Majuro","f":"Na atole Bikini tu USA testovali atómové bomby. Podľa neho dostali meno plavky bikiny.","a":181,"p":82011},{"c":"mu","k":"F","n":"Maurícius","cap":"Port Louis","f":"Jediné miesto, kde žil vták dodo. Vyhynul okolo roku 1680.","a":2040,"p":1311375},{"c":"mr","k":"F","n":"Mauritánia","cap":"Nuakšott","f":"Cez Saharu tu jazdí jeden z najdlhších vlakov sveta, dlhý až 3 km, ktorý vozí železnú rudu.","a":1030700,"p":5202109},{"c":"mx","k":"S","n":"Mexiko","cap":"Mexiko","f":"Pochádza odtiaľto čokoláda, kukurica aj chilli. Hlavné mesto stojí na mieste aztéckeho Tenochtitlanu.","a":1964375,"p":130739927},{"c":"fm","k":"O","n":"Mikronézske federatívne štáty","cap":"Palikir","f":"Má vyše 600 ostrovov. Na ostrove Yap sa ako peniaze používali obrovské kamenné kotúče.","a":702,"p":99603},{"c":"mm","k":"A","n":"Mjanmarsko","cap":"Nepjito","note":"Najväčšie mesto je Rangún.","f":"Kedysi sa volalo Barma. V Bagane stojí vyše 2 000 starobylých chrámov.","a":676578,"p":57931718},{"c":"md","k":"E","n":"Moldavsko","cap":"Kišiňov","f":"V pivniciach Mileștii Mici je najväčšia zbierka vína na svete, chodby sú dlhé asi 200 km.","a":33851,"p":3578930},{"c":"mc","k":"E","n":"Monako","cap":"Monako","f":"Druhá najmenšia krajina sveta. Každý rok sa tu jazdia preteky formuly 1 priamo v uliciach.","a":2.02,"p":32047},{"c":"mn","k":"A","n":"Mongolsko","cap":"Ulanbátar","f":"Najredšie osídlená krajina sveta. Ulanbátar je najchladnejšie hlavné mesto sveta.","a":1564116,"p":3281676},{"c":"mz","k":"F","n":"Mozambik","cap":"Maputo","f":"Ako jediná krajina má na vlajke modernú zbraň, samopal AK-47.","a":799380,"p":34206144},{"c":"na","k":"F","n":"Namíbia","cap":"Windhoek","f":"Púšť Namib je najstaršia púšť sveta. Duny v Sossusvlei patria k najvyšším na Zemi.","a":824292,"p":2852777},{"c":"nr","k":"O","n":"Nauru","cap":"Bez oficiálneho hlavného mesta","note":"Vládne úrady sú v Yarene.","f":"Tretia najmenšia krajina sveta. Celý ostrov obídeš autom asi za 20 minút.","a":21,"p":9930},{"c":"de","k":"E","n":"Nemecko","cap":"Berlín","f":"Najľudnatejšia krajina Európskej únie. Na diaľniciach sú úseky bez rýchlostného obmedzenia.","a":357022,"p":84012284},{"c":"np","k":"A","n":"Nepál","cap":"Káthmandu","f":"Leží tu Mount Everest (8 849 m), najvyšší vrch sveta. Ako jediná krajina nemá obdĺžnikovú vlajku.","a":147181,"p":31334402},{"c":"ne","k":"F","n":"Niger","cap":"Niamey","f":"Takmer 80 % územia pokrýva Sahara. Má jednu z najmladších populácií sveta.","a":1267000,"p":27322555},{"c":"ng","k":"F","n":"Nigéria","cap":"Abuja","f":"Najľudnatejšia krajina Afriky. Jej filmový priemysel Nollywood natočí viac filmov ako Hollywood.","a":923768,"p":244344065},{"c":"ni","k":"S","n":"Nikaragua","cap":"Managua","f":"V jazere Nikaragua žijú žraloky, ktoré sa sem dostanú z mora po rieke.","a":130370,"p":6739380},{"c":"no","k":"E","n":"Nórsko","cap":"Oslo","f":"Je známe fjordmi. Na severe v lete slnko vôbec nezapadá, hovorí sa tomu polnočné slnko.","a":323802,"p":5509733},{"c":"nz","k":"O","n":"Nový Zéland","cap":"Wellington","f":"Ako prvá krajina dala ženám volebné právo (1893). Natáčal sa tu Pán prsteňov.","a":268838,"p":5161211},{"c":"om","k":"A","n":"Omán","cap":"Maskat","f":"Kedysi bol centrom obchodu s kadidlom. V minulosti mu patril aj Zanzibar v Afrike.","a":309500,"p":3969824},{"c":"pk","k":"A","n":"Pakistan","cap":"Islamabad","f":"Leží tu K2 (8 611 m), druhý najvyšší vrch sveta. Šije sa tu väčšina futbalových lôpt sveta.","a":796095,"p":257047044},{"c":"pw","k":"O","n":"Palau","cap":"Ngerulmud","f":"V Jazere medúz sa dá plávať medzi miliónmi medúz, ktoré takmer nežihľajú.","a":459,"p":21947},{"c":"ps","k":"A","n":"Palestína","cap":"Východný Jeruzalem","note":"Vyhlásené hlavné mesto, úrady sídlia v Ramalláhu.","f":"Tvoria ju dve oddelené územia, Západný breh Jordánu a pásmo Gazy. Jericho patrí k najstarším mestám sveta.","a":5860,"p":3310554},{"c":"pa","k":"S","n":"Panama","cap":"Panama","f":"Panamský prieplav spája Atlantický a Tichý oceán, takže lode nemusia oboplávať Južnú Ameriku.","a":75420,"p":4536008},{"c":"pg","k":"O","n":"Papua-Nová Guinea","cap":"Port Moresby","f":"Hovorí sa tu vyše 800 jazykmi, najviac na svete.","a":462840,"p":10273996},{"c":"py","k":"J","n":"Paraguaj","cap":"Asunción","f":"Väčšina ľudí hovorí aj jazykom guaraní. Vodná elektráreň Itaipú patrí k najväčším na svete.","a":406752,"p":7604044},{"c":"pe","k":"J","n":"Peru","cap":"Lima","f":"Leží tu inské mesto Machu Picchu. Pochádzajú odtiaľto zemiaky, pestuje sa tu vyše 3 000 druhov.","a":1285216,"p":32768614},{"c":"ci","k":"F","n":"Pobrežie Slonoviny","cap":"Yamoussoukro","note":"Väčšina úradov a hospodárske centrum je v Abidžane.","f":"Najväčší producent kakaa na svete. Čokoláda, ktorú ješ, je pravdepodobne odtiaľto.","a":322463,"p":31855971},{"c":"pl","k":"E","n":"Poľsko","cap":"Varšava","f":"Pochádzala odtiaľto Marie Curie, dvojnásobná nositeľka Nobelovej ceny. V soľnej bani Wieliczka je kostol zo soli.","a":312685,"p":38746310},{"c":"pt","k":"E","n":"Portugalsko","cap":"Lisabon","f":"Najzápadnejšia krajina pevninskej Európy. Portugalskí moreplavci objavili námornú cestu do Indie.","a":92090,"p":10194277},{"c":"at","k":"E","n":"Rakúsko","cap":"Viedeň","f":"Rodisko Wolfganga Amadea Mozarta. Viac ako polovicu krajiny pokrývajú Alpy.","a":83871,"p":9174390},{"c":"gq","k":"F","n":"Rovníková Guinea","cap":"Malabo","f":"Jediná krajina Afriky, kde je úradným jazykom španielčina. Hlavné mesto leží na ostrove Bioko.","a":28051,"p":1795834},{"c":"ro","k":"E","n":"Rumunsko","cap":"Bukurešť","f":"Pochádza odtiaľto legenda o Drakulovi. Palác parlamentu v Bukurešti je jedna z najťažších budov sveta.","a":238391,"p":18148155},{"c":"ru","k":"E","n":"Rusko","cap":"Moskva","f":"Najväčšia krajina sveta s 11 časovými pásmami. Jazero Bajkal je najhlbšie jazero sveta.","a":17098242,"p":140134279},{"c":"rw","k":"F","n":"Rwanda","cap":"Kigali","f":"Krajina tisícich kopcov. Igelitové tašky sú tu zakázané od roku 2008.","a":26338,"p":13623302},{"c":"sv","k":"S","n":"Salvádor","cap":"San Salvador","f":"Najmenšia krajina Strednej Ameriky. Ako prvá krajina na svete zaviedla bitcoin ako zákonné platidlo.","a":21041,"p":6334723},{"c":"ws","k":"O","n":"Samoa","cap":"Apia","f":"V roku 2011 vynechala celý deň, 30. december, aby mala rovnaký dátum ako Austrália.","a":2831,"p":210223},{"c":"sm","k":"E","n":"San Maríno","cap":"San Maríno","f":"Najstaršia republika sveta, podľa tradície založená v roku 301. Celé ju obklopuje Taliansko.","a":61,"p":35291},{"c":"sa","k":"A","n":"Saudská Arábia","cap":"Rijád","f":"Najväčšia krajina sveta bez jedinej rieky. Leží tu Mekka, najsvätejšie mesto islamu.","a":2149690,"p":36544431},{"c":"sn","k":"F","n":"Senegal","cap":"Dakar","f":"Dakar je najzápadnejšie mesto pevninskej Afriky. Jazero Retba je ružové vďaka riasam.","a":196722,"p":18847519},{"c":"kp","k":"A","n":"Severná Kórea","cap":"Pchjongjang","f":"Patrí k najuzavretejším krajinám sveta. Bežní ľudia nemajú prístup na internet.","a":120538,"p":26402841},{"c":"mk","k":"E","n":"Severné Macedónsko","cap":"Skopje","f":"Rodisko Matky Terezy. Ohridské jazero patrí k najstarším jazerám Európy.","a":25713,"p":2137556},{"c":"sc","k":"F","n":"Seychely","cap":"Victoria","f":"Rastie tu palma coco de mer s najväčším semenom na svete, ťažkým až 25 kg.","a":455,"p":98187},{"c":"sl","k":"F","n":"Sierra Leone","cap":"Freetown","f":"Freetown, slobodné mesto, založili oslobodení otroci. Názov krajiny znamená Levie hory.","a":71740,"p":9331203},{"c":"sg","k":"A","n":"Singapur","cap":"Singapur","f":"Mestský štát na asi 60 ostrovoch. Predávať žuvačky je tu zakázané.","a":719,"p":6080545},{"c":"sk","k":"E","n":"Slovensko","cap":"Bratislava","f":"Bratislava je jediné hlavné mesto, ktoré hraničí s dvoma štátmi. Patríme k krajinám s najviac hradmi na obyvateľa.","a":49035,"p":5563649},{"c":"si","k":"E","n":"Slovinsko","cap":"Ľubľana","f":"Takmer 60 % územia pokrývajú lesy. Na vlajke je hora Triglav.","a":20273,"p":2097893},{"c":"so","k":"F","n":"Somálsko","cap":"Mogadišo","f":"Má najdlhšie pobrežie pevninskej Afriky. Chová sa tu najviac tiav na svete.","a":637657,"p":20324160},{"c":"ae","k":"A","n":"Spojené arabské emiráty","cap":"Abú Zabí","f":"V Dubaji stojí Burdž Chalífa, najvyššia budova sveta (828 m). Krajinu tvorí 7 emirátov.","a":83600,"p":10093593},{"c":"gb","k":"E","n":"Spojené kráľovstvo","cap":"Londýn","f":"Tvoria ho Anglicko, Škótsko, Wales a Severné Írsko. Londýnske metro je najstaršie na svete (1863).","a":243610,"p":68751311},{"c":"us","k":"S","n":"Spojené štáty americké","cap":"Washington, D.C.","f":"Majú 50 štátov a každý má na vlajke jednu hviezdu. Majú najväčšiu ekonomiku sveta.","a":9833517,"p":338016259},{"c":"rs","k":"E","n":"Srbsko","cap":"Belehrad","f":"Belehrad leží na sútoku Dunaja a Sávy. Srbsko patrí k najväčším producentom malín na svete.","a":77474,"p":6652212},{"c":"lk","k":"A","n":"Srí Lanka","cap":"Šrí Džajavardanapura Kotte","note":"Najväčšie mesto a sídlo mnohých úradov je Kolombo.","f":"Patrí k najväčším vývozcom čaju. V roku 1960 tu zvolili prvú premiérku na svete.","a":65610,"p":22050561},{"c":"cf","k":"F","n":"Stredoafrická republika","cap":"Bangui","f":"Leží takmer presne v strede Afriky, odtiaľ jej názov. Nemá more.","a":622984,"p":5750570},{"c":"sd","k":"F","n":"Sudán","cap":"Chartúm","note":"Počas vojny vláda dočasne sídli v Port Sudane.","f":"Má viac pyramíd ako Egypt, vyše 200 v starovekej Núbii.","a":1861484,"p":50467278},{"c":"sr","k":"J","n":"Surinam","cap":"Paramaribo","f":"Najmenšia krajina Južnej Ameriky. Úradným jazykom je holandčina a takmer celú krajinu pokrýva prales.","a":163820,"p":653605},{"c":"lc","k":"S","n":"Svätá Lucia","cap":"Castries","f":"Dva sopečné vrchy Pitons sú na vlajke ako trojuholníky. Je to jediná krajina pomenovaná po žene.","a":616,"p":168462},{"c":"kn","k":"S","n":"Svätý Krištof a Nevis","cap":"Basseterre","f":"Najmenšia krajina oboch Amerík rozlohou aj počtom obyvateľov.","a":261,"p":55434},{"c":"st","k":"F","n":"Svätý Tomáš a Princov ostrov","cap":"São Tomé","f":"Leží takmer na rovníku v Guinejskom zálive. Okolo roku 1910 bol najväčším producentom kakaa na svete.","a":964,"p":223561},{"c":"vc","k":"S","n":"Svätý Vincent a Grenadíny","cap":"Kingstown","f":"Natáčali sa tu Piráti z Karibiku. Na vlajke sú tri zelené kosoštvorce v tvare písmena V.","a":389,"p":100647},{"c":"sy","k":"A","n":"Sýria","cap":"Damask","f":"Damask patrí k najstarším nepretržite obývaným mestám sveta.","a":187437,"p":24261882},{"c":"sb","k":"O","n":"Šalamúnove ostrovy","cap":"Honiara","f":"Má vyše 900 ostrovov. Na ostrove Guadalcanal sa v 2. svetovej vojne odohrala veľká bitka.","a":28896,"p":738774},{"c":"es","k":"E","n":"Španielsko","cap":"Madrid","f":"Madrid leží takmer presne v strede krajiny. Patria mu aj Kanárske ostrovy pri Afrike.","a":505370,"p":47280433},{"c":"ch","k":"E","n":"Švajčiarsko","cap":"Bern","note":"Oficiálne sa Bern volá spolkové mesto.","f":"Má 4 úradné jazyky. Okrem Vatikánu je to jediná krajina so štvorcovou vlajkou.","a":41277,"p":8925741},{"c":"se","k":"E","n":"Švédsko","cap":"Štokholm","f":"Pochádza odtiaľto IKEA, Minecraft aj Nobelova cena. Na severe každú zimu postavia hotel z ľadu.","a":450295,"p":10643745},{"c":"tj","k":"A","n":"Tadžikistan","cap":"Dušanbe","f":"Vyše 90 % územia tvoria hory. Pohorie Pamír sa volá strecha sveta.","a":144100,"p":10593876},{"c":"tw","k":"A","n":"Taiwan","cap":"Tchaj-pej","note":"Uznáva ho len málo štátov, Čína ho považuje za svoje územie.","f":"Vyrába väčšinu najmodernejších počítačových čipov sveta. Mrakodrap Taipei 101 bol 6 rokov najvyšší na svete.","a":35980,"p":23600776},{"c":"it","k":"E","n":"Taliansko","cap":"Rím","f":"Má najviac pamiatok UNESCO na svete. Vo vnútri Ríma leží celý štát Vatikán.","a":301340,"p":60924851},{"c":"tz","k":"F","n":"Tanzánia","cap":"Dodoma","note":"Najväčšie mesto je Dar es Salaam.","f":"Leží tu Kilimandžáro (5 895 m), najvyšší vrch Afriky, aj národný park Serengeti.","a":947300,"p":69145464},{"c":"th","k":"A","n":"Thajsko","cap":"Bangkok","f":"Nikdy nebolo európskou kolóniou. Celý obradný názov Bangkoku je najdlhší názov mesta na svete.","a":513120,"p":70025248},{"c":"tg","k":"F","n":"Togo","cap":"Lomé","f":"Úzka krajina, široká len okolo 100 km. Na vlajke je 5 pruhov za 5 regiónov.","a":56785,"p":9143439},{"c":"to","k":"O","n":"Tonga","cap":"Nuku'alofa","f":"Jediné kráľovstvo v Tichomorí, ktoré nikdy nebolo kolóniou.","a":747,"p":104519},{"c":"tt","k":"S","n":"Trinidad a Tobago","cap":"Port of Spain","f":"Vymysleli tu oceľové bubny steelpan. Pitch Lake je najväčšie prírodné jazero asfaltu na svete.","a":5128,"p":1410170},{"c":"tn","k":"F","n":"Tunisko","cap":"Tunis","f":"Pri Tunise ležalo staroveké Kartágo. Natáčali sa tu Hviezdne vojny, planéta Tatooine.","a":163610,"p":11962995},{"c":"tr","k":"A","n":"Turecko","cap":"Ankara","f":"Istanbul leží na dvoch kontinentoch, v Európe aj v Ázii. Odtiaľto sa do Holandska dostali tulipány.","a":783562,"p":84625585},{"c":"tm","k":"A","n":"Turkménsko","cap":"Ašchabad","f":"V púšti Karakum od roku 1971 nepretržite horí plynový kráter Darvaza, prezývaný Brána do pekla.","a":488100,"p":5744151},{"c":"tv","k":"O","n":"Tuvalu","cap":"Funafuti","f":"Štvrtá najmenšia krajina sveta. Zarába aj na predaji internetovej domény .tv.","a":26,"p":11824},{"c":"ug","k":"F","n":"Uganda","cap":"Kampala","f":"Pri meste Jinja vyteká z Viktóriinho jazera Biely Níl. V horách žijú horské gorily.","a":241038,"p":50863850},{"c":"ua","k":"E","n":"Ukrajina","cap":"Kyjev","f":"Najväčšia krajina, ktorá leží celá v Európe. Má veľmi úrodnú pôdu, černozem.","a":603550,"p":35661826},{"c":"uy","k":"J","n":"Uruguaj","cap":"Montevideo","f":"V roku 1930 usporiadal a vyhral prvé majstrovstvá sveta vo futbale.","a":176215,"p":3449444},{"c":"uz","k":"A","n":"Uzbekistan","cap":"Taškent","f":"Je obklopený iba vnútrozemskými krajinami, podobne ako Lichtenštajnsko. Samarkand bol slávnym mestom Hodvábnej cesty.","a":447400,"p":37015151},{"c":"vu","k":"O","n":"Vanuatu","cap":"Port-Vila","f":"K sopke Yasur sa dá prísť až k okraju krátera. Skoky z drevených veží s liánami tu inšpirovali bungee jumping.","a":12189,"p":318007},{"c":"va","k":"E","n":"Vatikán","cap":"Vatikán","f":"Najmenšia krajina sveta, má asi 0,44 km². Sídli tu pápež.","a":0.44,"p":1000},{"c":"ve","k":"J","n":"Venezuela","cap":"Caracas","f":"Je tu najvyšší vodopád sveta Salto Ángel (979 m). Má najväčšie zásoby ropy na svete.","a":912050,"p":31755435},{"c":"vn","k":"A","n":"Vietnam","cap":"Hanoj","f":"Druhý najväčší vývozca kávy na svete. Jaskyňa Son Doong je najväčšia jaskyňa sveta.","a":331210,"p":106688169},{"c":"tl","k":"A","n":"Východný Timor","cap":"Dili","f":"Nezávislosť získal v roku 2002 ako prvý nový štát 21. storočia.","a":14874,"p":1404785},{"c":"zm","k":"F","n":"Zambia","cap":"Lusaka","f":"Na hranici so Zimbabwe padajú Viktóriine vodopády, ktoré miestni volajú dym, ktorý hrmí.","a":752618,"p":22021971},{"c":"zw","k":"F","n":"Zimbabwe","cap":"Harare","f":"Názov má podľa ruín kamenného mesta Veľké Zimbabwe. V roku 2008 tu vytlačili bankovku 100 biliónov dolárov.","a":390757,"p":17472752}];
+const CONT=[
+ {k:'all',n:'Celý svet',h:'Celý <em>svet</em>'},
+ {k:'E',n:'Európa',h:'<em>Európa</em>'},
+ {k:'A',n:'Ázia',h:'<em>Ázia</em>'},
+ {k:'F',n:'Afrika',h:'<em>Afrika</em>'},
+ {k:'S',n:'Severná a Stredná Amerika',h:'Severná a Stredná <em>Amerika</em>'},
+ {k:'J',n:'Južná Amerika',h:'Južná <em>Amerika</em>'},
+ {k:'O',n:'Austrália a Oceánia',h:'Austrália a <em>Oceánia</em>'}
+];
+const CN=Object.fromEntries(CONT.map(c=>[c.k,c.n]));
+const byId=Object.fromEntries(DATA.map(d=>[d.c,d]));
+const coll=new Intl.Collator('sk');
+const nb=' ';
+const fmtInt=n=>String(n).replace(/\B(?=(\d{3})+(?!\d))/g,nb);
+const dec=(n,d)=>n.toFixed(d).replace('.',',');
+function fmtArea(a){return (a<10?dec(a,2):fmtInt(Math.round(a)))+nb+'km²'}
+function fmtPop(p){
+  if(p>=1e9)return dec(p/1e9,2)+nb+'mld.';
+  if(p>=1e8)return Math.round(p/1e6)+nb+'mil.';
+  if(p>=1e6)return dec(p/1e6,1)+nb+'mil.';
+  if(p>=1e5)return Math.round(p/1e3)+nb+'tis.';
+  if(p>=1e4)return dec(p/1e3,0)+nb+'tis.';
+  if(p>=2e3)return dec(p/1e3,1)+nb+'tis.';
+  return 'asi '+fmtInt(p);
+}
+const img=c=>`flags/${c}.svg`;
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const pad=(n,w)=>String(n).padStart(w,'0');
+const ORDER_K=['E','A','F','S','J','O'];
+function pool(k){
+  const list=DATA.filter(d=>k==='all'||d.k===k);
+  return list.sort((a,b)=>k==='all'?(ORDER_K.indexOf(a.k)-ORDER_K.indexOf(b.k))||coll.compare(a.n,b.n):coll.compare(a.n,b.n)).map(d=>d.c);
+}
+
+/* ---------- state ---------- */
+const $=id=>document.getElementById(id);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const dur=ms=>reduce?1:ms;
+let cont='E';
+try{const s=localStorage.getItem('vlajky-cont');if(s&&CN[s])cont=s}catch(e){}
+let mode='learn', flipped=false, busy=false;
+const L={order:[],i:0,random:false};
+const T={queue:[],total:0,known:0,wrong:new Set(),done:false};
+function newLearn(){L.order=L.random?shuffle(pool(cont)):pool(cont);L.i=0}
+function newTest(ids){T.queue=shuffle([...ids]);T.total=ids.length;T.known=0;T.wrong=new Set();T.done=false}
+newLearn();newTest(pool(cont));
+
+const card=$('card'), wrap=$('wrap'), tint=$('tint');
+const ICON={
+  prev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>',
+  next:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>'
+};
+const currentId=()=>mode==='learn'?L.order[L.i]:T.queue[0];
+const cache={};
+function preload(c){if(c&&!cache[c]){cache[c]=new Image();cache[c].src=img(c)}}
+
+function fill(id){
+  const d=byId[id];
+  for(const el of [$('f-flag'),$('b-flag')]){el.src=img(id);el.className=id==='np'?'np':''}
+  $('b-country').textContent=d.n;$('b-cap').textContent=d.cap;
+  $('b-note').textContent=d.note||'';$('b-note').hidden=!d.note;
+  $('b-area').textContent=fmtArea(d.a);$('b-pop').textContent=fmtPop(d.p);$('b-fact').textContent=d.f;
+  $('f-hint').textContent=mode==='learn'?'Ťukni a otoč':'Krajina a hlavné mesto?';
+  if(mode==='learn'){preload(L.order[(L.i+1)%L.order.length]);preload(L.order[(L.i-1+L.order.length)%L.order.length])}
+  else{preload(T.queue[1]);preload(T.queue[2])}
+}
+function resetFlip(){card.classList.add('instant');card.classList.remove('flipped');flipped=false;void card.offsetWidth;card.classList.remove('instant')}
+function setFlip(v){if(mode==='test'&&T.done)return;flipped=v;card.classList.toggle('flipped',v);controls()}
+
+function controls(){
+  const c=$('ctrl');
+  if(mode==='learn'){
+    c.innerHTML=`<button class="btn round" id="c-prev" aria-label="Predchádzajúca">${ICON.prev}</button><button class="btn white wide" id="c-flip">${flipped?'Späť na vlajku':'Otočiť'}</button><button class="btn round" id="c-next" aria-label="Ďalšia">${ICON.next}</button>`;
+    $('c-prev').onclick=()=>step(-1);$('c-next').onclick=()=>step(1);$('c-flip').onclick=()=>setFlip(!flipped);
+    $('keys').textContent='medzerník otočiť · ← → listovať · na mobile potiahni kartu';
+  }else if(mode==='test'&&!T.done){
+    c.innerHTML=flipped
+      ?`<button class="btn wide" id="c-no">Nevedel</button><button class="btn white wide" id="c-yes">Vedel</button>`
+      :`<button class="btn orange wide" id="c-flip">Otočiť kartu</button>`;
+    if(flipped){$('c-no').onclick=()=>answer(false);$('c-yes').onclick=()=>answer(true)}else $('c-flip').onclick=()=>setFlip(true);
+    $('keys').textContent=flipped?'← nevedel · → vedel · alebo potiahni kartu':'medzerník otočiť';
+  }else{c.innerHTML='';$('keys').textContent=''}
+}
+
+function render(){
+  const isList=mode==='list';
+  $('play').hidden=isList;$('list').hidden=!isList;
+  if(isList){renderList();return}
+  $('meta-learn').hidden=mode!=='learn';$('meta-test').hidden=mode!=='test';
+  if(mode==='learn'){
+    const w=L.order.length>99?3:2;
+    $('l-count').textContent=`${pad(L.i+1,w)} / ${pad(L.order.length,w)}`;
+    $('l-group').textContent=L.random?'náhodné poradie':CN[byId[L.order[L.i]].k];
+    $('l-random').setAttribute('aria-pressed',L.random);
+  }else{
+    $('t-left').textContent=T.queue.length;$('t-known').textContent=T.known;$('t-wrong').textContent=T.wrong.size;
+    $('t-prog').style.width=(T.total?T.known/T.total*100:0)+'%';
+  }
+  const showDone=mode==='test'&&T.done;
+  $('stage').hidden=showDone;$('done').hidden=!showDone;
+  if(showDone)finish();else fill(currentId());
+  controls();
+}
+
+function enter(fromX){
+  wrap.animate([{transform:`translateX(${fromX}px) scale(.92)`,opacity:0},{transform:'none',opacity:1}],{duration:dur(560),easing:'cubic-bezier(.2,.95,.25,1.12)'});
+}
+async function leave(dir){
+  const from=wrap.style.transform||'none';
+  const a=wrap.animate([{transform:from,opacity:1},{transform:`translateX(${dir*120}%) rotate(${dir*12}deg)`,opacity:0}],{duration:dur(320),easing:'cubic-bezier(.5,0,.75,.2)',fill:'forwards'});
+  await a.finished;wrap.style.transform='';showTint(0);a.cancel();
+}
+async function go(dir,mutate,enterFrom){
+  if(busy)return;busy=true;
+  await leave(dir);
+  mutate();resetFlip();render();
+  if(!(mode==='test'&&T.done))enter(enterFrom);
+  else $('done').animate([{transform:'scale(.94)',opacity:0},{transform:'none',opacity:1}],{duration:dur(600),easing:'cubic-bezier(.2,.95,.25,1.1)'});
+  busy=false;
+}
+function step(d){go(-d,()=>{L.i=(L.i+d+L.order.length)%L.order.length},d*60)}
+function answer(ok){
+  if(mode!=='test'||!flipped||T.done)return;
+  go(ok?1:-1,()=>{
+    const id=T.queue.shift();
+    if(ok)T.known++;else{T.wrong.add(id);T.queue.splice(Math.min(3,T.queue.length),0,id)}
+    if(!T.queue.length)T.done=true;
+  },0);
+}
+function finish(){
+  const w=[...T.wrong];
+  $('score').innerHTML=`${T.total-w.length}<em>/${T.total}</em>`;
+  $('done-text').textContent=w.length?'Tieto ti robili problém. Zopakuj ich, kým ich nedáš.':'Všetko na prvý pokus. Zajtra si daj ešte jedno náhodné kolo.';
+  $('done-flags').innerHTML=w.map(id=>`<img src="${img(id)}" alt="${byId[id].n}" title="${byId[id].n}">`).join('');
+  $('again-wrong').hidden=!w.length;
+}
+function restartTest(ids){busy=false;newTest(ids);resetFlip();render();enter(0)}
+$('again-all').onclick=()=>restartTest(pool(cont));
+$('again-wrong').onclick=()=>restartTest([...T.wrong]);
+$('t-restart').onclick=()=>restartTest(pool(cont));
+$('l-random').onclick=()=>{L.random=!L.random;go(-1,newLearn,60)};
+
+/* ---------- continent rail ---------- */
+function renderRail(){
+  $('rail').innerHTML=CONT.map(c=>`<button data-k="${c.k}" aria-pressed="${c.k===cont}">${c.n}<span>${c.k==='all'?DATA.length:DATA.filter(d=>d.k===c.k).length}</span></button>`).join('');
+  $('rail').querySelectorAll('button').forEach(b=>b.onclick=()=>pickCont(b.dataset.k));
+}
+function pickCont(k){
+  if(k===cont)return;cont=k;
+  try{localStorage.setItem('vlajky-cont',k)}catch(e){}
+  $('rail').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===k));
+  newLearn();newTest(pool(cont));busy=false;resetFlip();render();
+  const el=mode==='list'?$('groups'):wrap;
+  el.animate([{transform:'translateY(12px) scale(.97)',opacity:0,filter:'blur(6px)'},{transform:'none',opacity:1,filter:'blur(0)'}],{duration:dur(520),easing:'cubic-bezier(.2,.9,.25,1.08)'});
+}
+renderRail();
+requestAnimationFrame(()=>{const r=$('rail'),b=r.querySelector('[aria-pressed="true"]');if(b&&b.offsetLeft+b.offsetWidth>r.clientWidth-40)r.scrollLeft=b.offsetLeft-16});
+
+/* ---------- swipe + tap ---------- */
+function showTint(dx){
+  if(mode!=='test'||Math.abs(dx)<4){tint.style.opacity=0;return}
+  tint.className='tint '+(dx>0?'yes':'no');$('tint-label').textContent=dx>0?'VEDEL':'NEVEDEL';
+  tint.style.opacity=Math.min(Math.abs(dx)/110,1);
+}
+let sx=null,dx=0,dragging=false;
+const canSwipe=()=>mode==='learn'||flipped;
+wrap.addEventListener('pointerdown',e=>{if(busy||e.button>0)return;sx=e.clientX;dx=0;dragging=false;wrap.setPointerCapture(e.pointerId)});
+wrap.addEventListener('pointermove',e=>{
+  if(sx===null)return;dx=e.clientX-sx;
+  if(Math.abs(dx)>6)dragging=true;if(!dragging)return;
+  const x=canSwipe()?dx:dx*.15;
+  wrap.style.transform=`translateX(${x}px) rotate(${x/24}deg)`;
+  showTint(canSwipe()?dx:0);
+});
+function snap(){
+  const from=wrap.style.transform||'none';wrap.style.transform='';showTint(0);
+  wrap.animate([{transform:from},{transform:'none'}],{duration:dur(500),easing:'cubic-bezier(.2,1.2,.3,1)'});
+}
+wrap.addEventListener('pointerup',()=>{
+  if(sx===null)return;sx=null;
+  if(!dragging){setFlip(!flipped);return}
+  if(canSwipe()&&Math.abs(dx)>90){
+    if(mode==='learn')step(dx<0?1:-1);else answer(dx>0);
+  }else snap();
+});
+wrap.addEventListener('pointercancel',()=>{sx=null;snap()});
+document.addEventListener('keydown',e=>{
+  if(mode==='list'||e.target.tagName==='INPUT')return;
+  if(e.code==='Space'||(e.key==='Enter'&&e.target===wrap)){if(e.target.tagName==='BUTTON')return;e.preventDefault();setFlip(!flipped)}
+  else if(e.key==='ArrowLeft'){mode==='learn'?step(-1):answer(false)}
+  else if(e.key==='ArrowRight'){mode==='learn'?step(1):answer(true)}
+});
+
+/* ---------- segmented control ---------- */
+const seg=$('seg'),ind=$('ind');
+function moveInd(){const b=seg.querySelector('[aria-selected="true"]');ind.style.width=b.offsetWidth+'px';ind.style.transform=`translateX(${b.offsetLeft}px)`}
+seg.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  if(b.dataset.mode===mode)return;
+  seg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  moveInd();mode=b.dataset.mode;busy=false;resetFlip();wrap.style.transform='';showTint(0);render();
+  const el=mode==='list'?$('list'):(mode==='test'&&T.done?$('done'):wrap);
+  el.animate([{transform:'translateY(14px) scale(.97)',opacity:0,filter:'blur(6px)'},{transform:'none',opacity:1,filter:'blur(0)'}],{duration:dur(560),easing:'cubic-bezier(.2,.9,.25,1.08)'});
+}));
+addEventListener('resize',moveInd);
+moveInd();if(document.fonts)document.fonts.ready.then(moveInd);
+
+/* ---------- overview ---------- */
+const norm=s=>s.normalize('NFD').replace(/\p{M}/gu,'').toLowerCase();
+function renderList(){
+  const q=norm($('q').value.trim());
+  const keys=cont==='all'?ORDER_K:[cont];
+  let total=0;
+  const html=keys.map(k=>{
+    const items=pool(k).map(c=>byId[c]).filter(d=>!q||norm(d.n).includes(q)||norm(d.cap).includes(q));
+    total+=items.length;if(!items.length)return '';
+    const h=CONT.find(c=>c.k===k).h;
+    return `<div class="group"><h2>${h}<span class="mono">${items.length} štátov</span></h2><div class="grid">${items.map(d=>`<div class="item"><div class="fl"><img loading="lazy" src="${img(d.c)}" alt="Vlajka: ${d.n}"${d.c==='np'?' style="border-radius:0"':''}></div><div class="n">${d.n}</div><div class="c">${d.cap}</div><div class="s">${fmtArea(d.a)} · ${fmtPop(d.p)} obyv.</div><div class="t">${d.f}</div></div>`).join('')}</div></div>`;
+  }).join('');
+  $('groups').innerHTML=total?html:'<p class="empty">Nič sa nenašlo. Skús iný názov alebo vyber Celý svet.</p>';
+}
+$('q').addEventListener('input',renderList);
+$('hidecap').addEventListener('change',e=>$('groups').classList.toggle('hidecap',e.target.checked));
+
+render();
+</script>
+
+<script>
+if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+</script>
+</body>
+</html>
